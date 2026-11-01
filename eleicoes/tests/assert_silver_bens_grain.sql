@@ -1,0 +1,8 @@
+-- grain of silver_bens: one row per (SQ_CANDIDATO, NR_ORDEM_BEM_CANDIDATO)
+SELECT
+    SQ_CANDIDATO,
+    NR_ORDEM_BEM_CANDIDATO,
+    COUNT(*) AS qt
+FROM {{ ref('silver_bens') }}
+GROUP BY SQ_CANDIDATO, NR_ORDEM_BEM_CANDIDATO
+HAVING COUNT(*) > 1

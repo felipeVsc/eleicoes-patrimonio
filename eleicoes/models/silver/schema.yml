@@ -1,0 +1,173 @@
+version: 2
+
+models:
+  - name: silver_candidatos
+    description: >
+      Candidaturas das eleições de 2018 e 2022 (consulta_cand do TSE), filtradas para o
+      1º turno e situação de candidatura APTO. Uma linha por candidatura (SQ_CANDIDATO).
+      Colunas mantidas como no arquivo original do TSE.
+    columns:
+      - name: DT_GERACAO
+        description: Data de geração do arquivo pelo TSE.
+      - name: HH_GERACAO
+        description: Hora de geração do arquivo pelo TSE.
+      - name: ANO_ELEICAO
+        description: Ano da eleição.
+        data_tests: [not_null]
+      - name: CD_TIPO_ELEICAO
+        description: Código do tipo de eleição.
+      - name: NM_TIPO_ELEICAO
+        description: Nome do tipo de eleição (ordinária ou suplementar).
+      - name: NR_TURNO
+        description: Número do turno. Sempre 1 nesta tabela.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1]
+                quote: false
+      - name: CD_ELEICAO
+        description: Código da eleição no TSE.
+        data_tests: [not_null]
+      - name: DS_ELEICAO
+        description: Descrição da eleição.
+      - name: DT_ELEICAO
+        description: Data da eleição.
+      - name: TP_ABRANGENCIA
+        description: Abrangência da eleição (estadual ou federal).
+      - name: SG_UF
+        description: Sigla da UF da candidatura (BR para cargos nacionais).
+      - name: SG_UE
+        description: Sigla da unidade eleitoral.
+      - name: NM_UE
+        description: Nome da unidade eleitoral.
+      - name: CD_CARGO
+        description: Código do cargo disputado.
+      - name: DS_CARGO
+        description: Descrição do cargo disputado.
+      - name: SQ_CANDIDATO
+        description: Identificador único da candidatura no TSE (muda a cada eleição).
+        data_tests: [unique, not_null]
+      - name: NR_CANDIDATO
+        description: Número do candidato na urna.
+      - name: NM_CANDIDATO
+        description: Nome completo do candidato.
+      - name: NM_URNA_CANDIDATO
+        description: Nome do candidato na urna.
+      - name: NM_SOCIAL_CANDIDATO
+        description: Nome social do candidato.
+      - name: NR_CPF_CANDIDATO
+        description: CPF do candidato. O TSE publica '-4' quando o CPF não é divulgado.
+      - name: DS_EMAIL
+        description: E-mail do candidato.
+      - name: CD_SITUACAO_CANDIDATURA
+        description: Código da situação da candidatura.
+      - name: DS_SITUACAO_CANDIDATURA
+        description: Situação da candidatura. Sempre APTO nesta tabela.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['APTO']
+      - name: TP_AGREMIACAO
+        description: Tipo de agremiação (partido isolado, coligação ou federação).
+      - name: NR_PARTIDO
+        description: Número do partido.
+      - name: SG_PARTIDO
+        description: Sigla do partido.
+      - name: NM_PARTIDO
+        description: Nome do partido.
+      - name: NR_FEDERACAO
+        description: Número da federação partidária.
+      - name: NM_FEDERACAO
+        description: Nome da federação partidária.
+      - name: SG_FEDERACAO
+        description: Sigla da federação partidária. '#NULO' quando não há federação (todas em 2018).
+      - name: DS_COMPOSICAO_FEDERACAO
+        description: Partidos que compõem a federação.
+      - name: SQ_COLIGACAO
+        description: Identificador da coligação.
+      - name: NM_COLIGACAO
+        description: Nome da coligação.
+      - name: DS_COMPOSICAO_COLIGACAO
+        description: Partidos que compõem a coligação.
+      - name: SG_UF_NASCIMENTO
+        description: UF de nascimento do candidato.
+      - name: DT_NASCIMENTO
+        description: Data de nascimento do candidato.
+      - name: NR_TITULO_ELEITORAL_CANDIDATO
+        description: Número do título eleitoral do candidato.
+      - name: CD_GENERO
+        description: Código do gênero.
+      - name: DS_GENERO
+        description: Gênero declarado na candidatura.
+      - name: CD_GRAU_INSTRUCAO
+        description: Código do grau de instrução.
+      - name: DS_GRAU_INSTRUCAO
+        description: Grau de instrução declarado na candidatura.
+      - name: CD_ESTADO_CIVIL
+        description: Código do estado civil.
+      - name: DS_ESTADO_CIVIL
+        description: Estado civil declarado na candidatura.
+      - name: CD_COR_RACA
+        description: Código da cor/raça.
+      - name: DS_COR_RACA
+        description: Cor/raça declarada na candidatura (pode mudar entre eleições).
+      - name: CD_OCUPACAO
+        description: Código da ocupação.
+      - name: DS_OCUPACAO
+        description: Ocupação declarada na candidatura.
+      - name: CD_SIT_TOT_TURNO
+        description: Código do resultado da candidatura no 1º turno.
+      - name: DS_SIT_TOT_TURNO
+        description: Resultado da candidatura no 1º turno (eleito, não eleito, suplente, ...).
+
+  - name: silver_bens
+    description: >
+      Bens declarados pelos candidatos nas eleições de 2018 e 2022 (bem_candidato do TSE).
+      Uma linha por bem de uma candidatura. Valores convertidos para DECIMAL e bens sem
+      tipo informado descartados.
+    columns:
+      - name: DT_GERACAO
+        description: Data de geração do arquivo pelo TSE.
+      - name: HH_GERACAO
+        description: Hora de geração do arquivo pelo TSE.
+      - name: CD_TIPO_ELEICAO
+        description: Código do tipo de eleição.
+      - name: NM_TIPO_ELEICAO
+        description: Nome do tipo de eleição (ordinária ou suplementar).
+      - name: DS_ELEICAO
+        description: Descrição da eleição.
+      - name: DT_ELEICAO
+        description: Data da eleição.
+      - name: SG_UF
+        description: Sigla da UF da candidatura.
+      - name: SG_UE
+        description: Sigla da unidade eleitoral.
+      - name: NM_UE
+        description: Nome da unidade eleitoral.
+      - name: DS_TIPO_BEM_CANDIDATO
+        description: Descrição do tipo de bem (ex. apartamento, veículo automotor).
+        data_tests: [not_null]
+      - name: DS_BEM_CANDIDATO
+        description: Descrição livre do bem. Em 2018 vem quase sempre como '#NULO'.
+      - name: DT_ULT_ATUAL_BEM_CANDIDATO
+        description: Data da última atualização da declaração do bem.
+      - name: HH_ULT_ATUAL_BEM_CANDIDATO
+        description: Hora da última atualização da declaração do bem.
+      - name: VR_BEM_CANDIDATO
+        description: Valor declarado do bem em R$ nominais, DECIMAL(18,2).
+        data_tests: [not_null]
+      - name: ANO_ELEICAO
+        description: Ano da eleição.
+        data_tests: [not_null]
+      - name: CD_ELEICAO
+        description: Código da eleição no TSE.
+        data_tests: [not_null]
+      - name: SQ_CANDIDATO
+        description: Identificador da candidatura que declarou o bem (liga com silver_candidatos).
+        data_tests: [not_null]
+      - name: NR_ORDEM_BEM_CANDIDATO
+        description: Número de ordem do bem dentro da declaração da candidatura.
+        data_tests: [not_null]
+      - name: CD_TIPO_BEM_CANDIDATO
+        description: Código do tipo de bem (ver gold_dim_tipo_bem).
+        data_tests: [not_null]

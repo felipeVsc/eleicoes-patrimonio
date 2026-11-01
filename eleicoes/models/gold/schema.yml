@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: gold_dim_eleicao
+    description: Uma linha por eleição (cd_eleicao).
+    columns:
+      - name: cd_eleicao
+        data_tests: [unique, not_null]
+
+  - name: gold_dim_pessoa
+    description: >
+      Uma linha por pessoa (apenas identificação). Os atributos declarados em cada
+      candidatura (nome, nascimento, gênero, cor/raça, ...) ficam em gold_dim_candidatura.
+      sk_pessoa = hash(cpf), ou hash('SQ:' || sq_candidato) quando o CPF não é divulgado.
+    columns:
+      - name: sk_pessoa
+        data_tests: [unique, not_null]
+
+  - name: gold_dim_candidatura
+    description: >
+      Uma linha por candidatura (sq_candidato), apenas 1º turno e situação APTO. Contém
+      todos os atributos declarados naquela candidatura, permitindo comparar as
+      candidaturas de uma mesma pessoa via sk_pessoa.
+    columns:
+      - name: sq_candidato
+        data_tests: [unique, not_null]
+      - name: cd_eleicao
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('gold_dim_eleicao')
+                field: cd_eleicao
+      - name: sk_pessoa
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('gold_dim_pessoa')
+                field: sk_pessoa
+
+  - name: gold_dim_tipo_bem
+    description: Uma linha por tipo de bem do TSE, com a macrocategoria derivada do código.
+    columns:
+      - name: cd_tipo_bem
+        data_tests: [unique, not_null]
+      - name: ds_categoria
+        data_tests: [not_null]
+
+  - name: gold_fact_bem_candidato
+    description: "Granularidade: um bem declarado por uma candidatura."
+    columns:
+      - name: sq_candidato
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('gold_dim_candidatura')
+                field: sq_candidato
+      - name: cd_eleicao
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('gold_dim_eleicao')
+                field: cd_eleicao
+      - name: sk_pessoa
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('gold_dim_pessoa')
+                field: sk_pessoa
+      - name: cd_tipo_bem
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('gold_dim_tipo_bem')
+                field: cd_tipo_bem
+      - name: vr_bem
+        data_tests: [not_null]

@@ -1,0 +1,9 @@
+eleicoes:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # relative to where dbt runs (the eleicoes/ folder)
+      path: '../eleicoes.duckdb'
+      schema: bronze
+      fixed_catalog: true

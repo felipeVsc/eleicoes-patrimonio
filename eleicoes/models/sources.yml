@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: eleicoes
+    description: >
+      Área de staging com os CSVs do TSE carregados sem transformação pelo main.ipynb
+      (read_csv_auto, delimitador ';', encoding latin-1). Contém as eleições de 2018 e 2022.
+    schema: bronze
+    tables:
+      - name: bens
+        description: Bens declarados pelos candidatos (arquivos bem_candidato_<ano>_BRASIL.csv).
+      - name: candidatos
+        description: Candidaturas de todos os turnos e situações (arquivos consulta_cand_<ano>_BRASIL.csv).

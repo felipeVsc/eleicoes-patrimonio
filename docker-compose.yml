@@ -1,0 +1,19 @@
+services:
+  superset:
+    build: ./superset
+    container_name: eleicoes-superset
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY:-eleicoes-dbt-local-dev-only-secret-key}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+    volumes:
+      # the database built by the notebook (bronze) and dbt (silver, gold); Superset only reads it
+      - ./eleicoes.duckdb:/data/eleicoes.duckdb:ro
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
+      - superset_home:/app/superset_home
+
+volumes:
+  superset_home:

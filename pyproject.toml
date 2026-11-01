@@ -1,0 +1,17 @@
+[project]
+name = "eleicoes-dbt"
+version = "0.1.0"
+description = "Pipeline DuckDB + dbt + Superset sobre o patrimônio declarado pelos candidatos nas eleições de 2018 e 2022 (TSE)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dbt>=2.0.9",
+    "dbt-duckdb>=1.11.0",
+    "duckdb>=2.0.0",
+    "pandas>=3.0.6",
+]
+
+[dependency-groups]
+dev = [
+    "matplotlib>=3.11.2",
+]
